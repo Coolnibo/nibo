@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算器</title>
+    <style>
+        .one{
+            width: 500px;
+            height: 80px;
+            margin: 50px 5px 20px  5px;
+            color: #fcfcfc;
+            line-height: 80px;
+            font-size: 40px;
+            text-align: right;
+        }
+        button{
+            border-block-color: #aaa;
+            border-radius: 50px;
+            line-height: 100px;
+            width: 100px;
+            height: 100px;
+            background-color: #aaa;
+            border: none;
+            font-size:50px;
+            color: #fcfcfc;
+        }
+        button:active{
+            background-color: rgb(115,115,115);
+        }
+        button.cl:active{
+            background-color: rgb(217,217,217);
+        }
+        button.oper:active{
+            color: rgb(242,163,59);
+            background-color: white;
+        }
+        .cl{
+            color: black;
+            font-size: 40px;
+        }
+        .butn{
+            width: 100px;
+            height: 100px;
+
+        }
+        .two{
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+        }
+        .oper{
+            background-color: rgb(242,163,59);
+        }
+        .zoo{
+            width: 220px;
+        }
+        .three{
+            margin-bottom: 10px;
+        }
+        .num{
+            background-color: rgb(51,51,51);
+        }
+    </style>
+</head>
+<body>
+<div style="display: flex;justify-content: space-around;">
+    <div style="background-color:black">
+        <div id="result" class="one">0</div>
+        <div class="two">
+            <div class="butn"><button class=" cl">AC</button></div>
+            <div class="butn"><button></button></div>
+            <div class="butn"><button></button></div>
+            <div class="butn "><button class="oper">÷</button></div>
+        </div>
+        <div class="two">
+            <div class="butn"><button class="num">7</button></div>
+            <div class="butn"><button class="num">8</button></div>
+            <div class="butn"><button class="num">9</button></div>
+            <div class="butn"><button class="oper">×</button></div>
+        </div>
+        <div class="two">
+            <div class="butn "><button class="num">4</button></div>
+            <div class="butn"><button class="num">5</button></div>
+            <div class="butn"><button class="num">6</button></div>
+            <div class="butn"><button class="oper">-</button></div>
+        </div>
+        <div class="two">
+            <div class="butn"><button class="num">1</button></div>
+            <div class="butn"><button class="num">2</button></div>
+            <div class="butn"><button class="num">3</button></div>
+            <div class="butn"><button class="oper">+</button></div>
+        </div>
+        <div class="three">
+            <div class="butn" style="float: left; margin-left: 10px;"><button class="zoo num">0</button></div>
+            <div class="butn" style="float: left; margin-left: 158px;"><button class="num">.</button></div>
+            <div class="butn" style="float: left; margin-left: 30px;"><button class="oper">=</button></div>
+            <div style="clear: both"></div>
+        </div>
+    </div>
+</div>
+<script>
+    var res = document.getElementById("result")                   //显示框的名字 res；显示框div
+    var late = document.getElementsByClassName("butn")            //点击按钮的名字 late；按钮button标签
+    var become = document.getElementsByClassName("num")
+    for (var j = 0; j<become.length;j++){
+        become[j].onclick = function (event){
+            if(event.target.innerHTML!=='0'){
+                document.getElementsByClassName("cl")[0].innerHTML = "C"
+            }
+        }
+    }
+    for (var i = 0; i < late.length; i++) {
+        late[i].onclick=function (event){
+            judgment(event.target.innerHTML)
+        }
+    }
+
+    var numb1 =''              //第一个数字
+    var numb2 =''             //第二个数字
+    var operator =''             //运算符号是什么
+    var result = ''             //运算结果
+    var display = ''             //显示在div的结果
+    var state = 1             //默认等待输入第一个数字，为2是选择运算符，3是输入第二个数字，4等待等号
+    function judgment(input){
+        switch (state){
+            case 1:
+                if (numb2!==''){
+                    if(!isNaN(input)){
+                        if (res.innerHTML!=='0'||input!=='0'){
+                            numb1+=input
+                            res.innerHTML=numb1
+                            state=1
+                        }
+                    }
+                    if(input==='+'||input==='-'||input==='×'||input==='÷'){
+                        numb2=''
+                        operator=input
+                        state=2
+                    }
+                    if(input==='='){
+                        result=opp(numb1,numb2,operator)
+                        display=result
+                        res.innerHTML=result
+                        state=4
+                    }
+                    if(input==='.'){
+                        if(!res.innerHTML.includes('.')){
+                            numb1 = res.innerHTML+input
+                            display=numb1
+                            res.innerHTML=numb1
+                        }
+                    }
+                    if(input==='C'){
+                        numb1=''
+                        display=''
+                        res.innerHTML='0'
+                    }
+                    if(input==='AC'){
+                        numb1=''
+                        operator=''
+                        display=''
+                        res.innerHTML=''
+                        AC()
+                        state=1
+                    }
+                }else {
+                    if(!isNaN(input)){
+                        if (res.innerHTML!=='0'||input!=='0'){
+                            numb1+=input
+                            res.innerHTML=numb1
+                            state=1
+                        }
+                    }
+                    if(input==='+'||input==='-'||input==='×'||input==='÷'){
+                        operator=input
+                        state=2
+                    }
+                    if(input==='.'){
+                        if(!res.innerHTML.includes('.')){
+                            numb1 = res.innerHTML+input
+                            display=numb1
+                            res.innerHTML=numb1
+                        }
+                    }
+                    if(input==='C'){
+                        numb1=''
+                        display=''
+                        res.innerHTML='0'
+                        AC()
+                    }
+                    if(input==='='){
+                        if (operator!==''){
+                            result=opp(numb1,numb2,operator)
+                            display=result
+                            res.innerHTML=result
+                            state=4
+                        }else {
+                            display=numb1
+                            res.innerHTML=display
+                            state=4
+                        }
+                    }
+                    if(input==='AC'){
+                        numb1=''
+                        operator=''
+                        display=''
+                        res.innerHTML=''
+                        AC()
+                        state=1
+                    }
+                }
+                break
+            case 2:
+                if(!isNaN(input)){
+                    numb2=input
+                    res.innerHTML=numb2
+                    state=3
+                }
+                if(input==='+'||input==='-'||input==='×'||input==='÷'){
+                    operator=input
+                    state=2
+                }
+                if(input==='='){
+                    if(numb2==='') {
+                        numb2 = numb1
+                    }
+                    display=opp(numb1,numb2,operator)
+                    res.innerHTML=display
+                    state=4
+                }
+                if(input==='.'){
+                    state=3
+                    if(!res.innerHTML.includes('.')){
+                        numb1 = res.innerHTML+input
+                        display=numb1
+                        res.innerHTML=numb1
+                    }
+
+                }
+                if(input==='C'){
+                    res.innerHTML='0'
+                    state=3
+                }
+                if(input==='AC'){
+                    numb1=''
+                    operator=''
+                    display=''
+                    res.innerHTML='0'
+                    AC()
+                    state=1
+                }
+                break
+            case 3:
+                if(numb1===''){
+                    numb1+=input
+                    res.innerHTML=input
+                    state =1
+                }else{
+                    if(!isNaN(input)){
+                        if(res.innerHTML==='0'){
+                            if(input!=='0'){
+                                numb2=input
+                                display=numb2
+                                res.innerHTML=display
+                            }
+                        }else {
+                            numb2+=input
+                            display=numb2
+                            res.innerHTML=display
+                        }
+                    }
+                    if(input==='+'||input==='-'||input==='×'||input==='÷'){
+                        if(numb2!==''){
+                            display=opp(numb1,numb2,operator)
+                            res.innerHTML=display
+                            numb1=display
+                            numb2=''
+                            operator=input
+                        }
+                        operator=input
+                        state=2
+                    }
+                    if(input==='='){
+                        if (numb2===''){
+                            numb2=numb1
+                            display=opp(numb1,numb1,operator)
+                            res.innerHTML=display
+                        }
+                        display=opp(numb1,numb2,operator)
+                        res.innerHTML =display
+                        state=4
+                        numb1=''
+                    }
+                    if(input==='.'){
+                        if(numb2===''){
+                            numb2='0.'
+                            display=numb2
+                            res.innerHTML=display
+                        }
+                        if (numb2==='0'){
+                            numb2='0.'
+                            display=numb2
+                            res.innerHTML=display
+                        }
+                        if(!numb2.includes('.')){
+                            numb2+=input
+                            display=numb2
+                            res.innerHTML=display
+                        }
+                    }
+                    if (input==='C'){
+                        numb2=''
+                        res.innerHTML='0'
+                        AC()
+                    }
+                    if (input==='AC'){
+                        numb1=''
+                        operator=''
+                        display=''
+                        res.innerHTML='0'
+                        AC()
+                        state=1
+                    }
+                }
+                break
+            case 4:
+                if (numb2===''){
+                    display=numb1
+                    res.innerHTML=display
+                    if(!isNaN(input)){
+                        numb1=input
+                        res.innerHTML=input
+                        state =1
+                    }
+                    if(input==='C'){
+                        display=''
+                        res.innerHTML='0'
+                        state=3
+                        numb1=numb2
+                        numb2=''
+                    }
+                    if(input==='+'||input==='-'||input==='×'||input==='÷'){
+                        numb1=display
+                        numb2=''
+                        operator=input
+                        state=2
+                    }
+                    if(input==='='){
+                        if(operator===''){
+                            res.innerHTML=numb1
+                            state=4
+                        }else {
+                            numb1=display
+                            display=opp(numb1,numb2,operator)
+                            res.innerHTML =display
+                            state=4
+                        }
+                    }
+                    if(input==='.'){
+                        if(!res.innerHTML.includes('.')){
+                            numb1 = res.innerHTML+input
+                            display=numb1
+                            res.innerHTML=numb1
+                            state=1
+                        }
+                    }
+                }else {
+                    if(!isNaN(input)){
+                        numb1=input
+                        res.innerHTML=input
+                        state =1
+                    }
+                    if(input==='+'||input==='-'||input==='×'||input==='÷'){
+                        numb1=display
+                        numb2=''
+                        state=2
+                        operator=input
+                    }
+                    if(input==='='){
+                        numb1=display
+                        display=opp(numb1,numb2,operator)
+                        res.innerHTML =display
+                        state=4
+                    }
+                    if(input==='C'){
+                        display=''
+                        res.innerHTML='0'
+                        state=3
+                        numb1=numb2
+                        numb2=''
+                    }
+                    if(input==='AC'){
+                        numb1=''
+                        operator=''
+                        display=''
+                        res.innerHTML=''
+                        AC()
+                        state=1
+                    }
+                    if(input==='.'){
+                        if(!res.innerHTML.includes('.')){
+                            numb1 = res.innerHTML+input
+                            display=numb1
+                            res.innerHTML=numb1
+                            state=1
+                        }
+                    }
+                }
+                break
+        }
+        console.log('现在的数字1是'+numb1)
+        console.log('现在的数字2是'+numb2)
+        console.log('现在的运算符是'+operator)
+        console.log('现在的计算器状态是'+state)
+        console.log('现在的计算的是'+display)
+    }
+    function opp(a,b,operator){
+        switch (operator){
+            case '+':
+                return parseFloat(a)+parseFloat(b)
+            case "-":
+                return parseFloat(a)-parseFloat(b)
+            case '×':
+                return parseFloat(a)*parseFloat(b)
+            case '÷':
+                return parseFloat(a)/parseFloat(b)
+        }
+    }
+    function AC(){
+        document.getElementsByClassName("cl")[0].innerHTML = "AC"
+    }
+</script>
+</body>
+</html>
